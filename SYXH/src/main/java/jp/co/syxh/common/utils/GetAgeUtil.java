@@ -26,7 +26,7 @@ public class GetAgeUtil {
 	 */
 	public int getAge(String birthday) throws ParseException {
 		//日期格式
-		SimpleDateFormat sdf = new SimpleDateFormat(Const.YYYY_MM_DD);
+		SimpleDateFormat sdf = new SimpleDateFormat(Const.DATE_FORMAT_YYYYMMDD);
 		//String型转换成DATE类型
 		Date birDate = sdf.parse(birthday);
 		//获取当前日期
