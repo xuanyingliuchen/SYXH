@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "HTTP://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.co.syxh.mapper.SYXH2001Mapper">
+  <select id='syxh20010001Select' parameterType="String" resultType="String">
+     select id from user where name = #{id};
+  </select>
+</mapper>

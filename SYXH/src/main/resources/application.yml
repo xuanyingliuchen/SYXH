@@ -14,4 +14,12 @@ spring:
     encoding: UTF-8
     content-type: text/html
     cache: false
-
+datasource:
+  url:jdbc:mysql://localhost:3306/root
+  driver-class-name:com.mysql.cj.jdbc.Driver
+  username:root
+  password:root
+  inital-size:10
+  max-active:20
+  max-idle:8
+  min-idle:8

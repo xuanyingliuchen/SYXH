@@ -8,7 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 @EnableScheduling
 public class DemoProcessor {
 	
-	@Scheduled(fixedRate=10000)
+	@Scheduled(fixedRate=10000000)
 	private void DemoTask() {
 		System.out.println("demo dingShi;");
 	}
