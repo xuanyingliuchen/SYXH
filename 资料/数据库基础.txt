@@ -1,0 +1,462 @@
+数据库：
+数据的仓库
+
+数据库产品：
+oracle
+sql server
+mysql 免费的版  商业版
+sqlite
+...
+
+数据实质上是存放在数据库的表中的
+表：同一类型的实体对象的信息
+行(记录) 一人实体对象信息的
+列（字段）  实体对象的属性
+
+localhost 本地主机
+
+
+21 ftp 上传
+1433 sql server
+1521 oracle
+80  http
+3306 mysql
+
+开发一个企业的员工管理系统 
+员工表  employee
+雇员编号  empno
+雇员姓名  ename
+年龄         age
+部门编号  deptno
+月薪         salary
+奖金         comm
+入职日期   hiredate
+职位         job
+
+
+部门表 department
+部门编号  deptno
+部门名      dname
+部门所在地  loc
+
+字符集：
+简体中文  gbk gb2312
+繁体中文 big5
+...
+
+utf-8  兼容全世界的语言文字
+
+
+每张表都建议有一个主键（primary key   唯一而且非空）
+注意：允许由多个列组合成一个主键的
+每个表只能有一个主键
+
+自增约束  auto_increment
+由数据库来维护值的唯一，递增的
+
+
+小数
+数度，小数点后的位数
+23.5    3,1
+
+
+查询：
+select *|列名 [as] 列的别名,...
+from 表名
+
+添加记录:
+insert into 表名[(列名,...)] values(值,...)
+注意：
+给的值要符合列的顺序、数据类型、长度要求、约束的要求
+如果给所有列赋值时可以省略列名
+
+在数据库文本或日期 用单引号括起来的
+
+
+select *|列名 [as] 列的别名,...
+from 表名
+[where 条件]
+[order by 排序列名 [asc|desc]]
+
+条件用与and 、或 or 、非 not
+
+limit关键字  取出指定范围的记录（应用于分页查询的）
+limit n[,m]
+取出前几条记录
+
+排序
+asc 升序  默认的
+desc 降序
+注意：
+order by子句一定是所有子句的最后一个子句
+
+SELECT * FROM employee
+SELECT ename,job,age FROM employee
+SELECT ename AS 雇员姓名,job AS 职位,age AS 年龄 FROM employee
+
+SELECT * FROM department
+
+INSERT INTO department VALUES(10,'财务部','北京')
+INSERT INTO department(deptno,dname,loc) VALUES(20,'市场部','上海')
+INSERT INTO department(deptno,dname,loc) VALUES(30,'开发部','大连')
+
+INSERT INTO employee(ename,age,deptno,salary,comm,hiredate,job) VALUES('张三',30,10,7100.5,3000,'2015-7-25','会计')
+INSERT INTO employee(ename,age,deptno,salary,comm,hiredate,job) VALUES('小岳岳',28,20,8100.2,5000,'2013-7-2','销售')
+
+
+-- 查询出年龄在30岁以上（包括30岁）的员工的姓名、年龄、月薪信息
+SELECT ename,age,salary FROM employee WHERE age>=30
+
+-- 查询出年龄在30岁以上（包括30岁）而且在10号部门的员工的姓名、年龄、月薪信息
+SELECT ename,age,salary FROM employee WHERE age>=30 AND deptno=10
+
+-- 查询出部门表的前2条记录
+SELECT * FROM department LIMIT 2
+
+-- 部门编号降序显示
+SELECT * FROM department ORDER BY deptno DESC
+
+-- 按雇员入职的日期进行排序
+SELECT * FROM employee ORDER BY hiredate DESC
+
+去重 distinct
+select distinct 列名 from 表名
+
+模糊查询
+like '通配表达式'
+通配符：
+%  代表0到多个字符
+_    代表一个字符
+
+张%
+
+张_
+
+
+-- 1、查询出所有新闻
+SELECT * FROM news;
+-- 2、查询出所有新闻类型
+SELECT * FROM newstopic;
+-- 3、查询出属于游戏类型的新闻
+SELECT * FROM news WHERE typeid=2;
+-- 4、要求按发布日期对新闻进行降序排序显示
+SELECT * FROM news ORDER BY publishdate DESC;
+-- 6、要求查询出不重复的新闻来源
+SELECT DISTINCT newsfrom FROM news;
+-- 7、要求以别名的形式显示新闻
+SELECT newsid 新闻编号,title 标题,publishdate 发布日期,newscontent 新闻内容,newsfrom 来源,typeid 类型编号 FROM news;
+-- 8、要求查询出新闻标题中有“原型体”
+SELECT * FROM news WHERE title LIKE '%原型体%';
+
+
+
+多表连接查询 
+
+企业数据库
+对企业的信息进行管理
+雇员 employee
+员工号  empno   e001  varchar(长度)
+员工姓名 ename   varchar
+职位   job  varchar
+月薪 sal   float  double decimal
+部门编号 deptno   int
+...
+
+
+部门 department
+部门编号 deptno  int
+部门名  dname  varchar
+部门所在地 loc  varchar
+
+
+utf-8字符集，兼容全世界的语言文字
+
+国际化
+
+表用来保存同一类型的实体对象信息的
+列（字段）实体的属性信息
+
+studentname
+
+
+多表连接查询的两种写法：
+1、老式写法
+select 列名,...
+from 表名1 别名1,表名2,...
+where 表名1.关联列=表名2.关联列  [and ...]
+
+n张表进行连接，连接条件就有n-1个
+
+2、新式写法（等连接、内连接）
+select 列名,...
+from 表名1 inner join 表名2 
+on  表名1.关联列=表名2.关联列
+[
+inner join 表名3 
+on  表名2.关联列=表名3.关联列
+...
+]
+
+注意：
+如果从多张表查询出来的列名相同，需要加上表名或表的别名的限定
+一旦给表起了别名，在当前语句中就不能再使用表名了，因为别名就代表了该表
+
+多表连接查询有几种类型：
+1、等连接
+2、自连接   等连接的一种特殊表现形式，表和自身进行连接
+应用场合：
+父子关系或上下级关系的信息保存在一张表中
+
+3、不等连接
+4、外连接
+（1）左外连接（实际开发中用这个）
+（2）右外连接
+（3）全外连接
+select 列名,...
+from 表名1 left|right|full [outer] join 表名2 
+on  表名1.关联列=表名2.关联列
+
+
+
+
+INSERT INTO department VALUES(10,'市场部','深圳');
+INSERT INTO department VALUES(20,'财务部','北京');
+INSERT INTO department VALUES(30,'开发部','大连');
+INSERT INTO department VALUES(40,'技术支持部','成都');
+
+SELECT * FROM department;
+
+INSERT INTO employee VALUES('e001','岳云鹏','销售员',5100.6,10);
+INSERT INTO employee VALUES('e002','沈腾','软件工程师',6100.6,30);
+INSERT INTO employee VALUES('e003','贾玲','销售员',3100.6,10);
+INSERT INTO employee VALUES('e004','张小婓','会计',4100.6,20);
+INSERT INTO employee VALUES('e005','烧饼','出纳',2100.6,20);
+
+SELECT * FROM employee;
+
+-- 查询出员工的姓名、职位、月薪、部门名
+SELECT ename,job,sal,dname FROM employee,department WHERE employee.deptno=department.deptno;
+
+SELECT ename,job,sal,dname FROM employee INNER JOIN department ON employee.deptno=department.deptno;
+
+SELECT ename,job,sal,dname,department.deptno FROM employee,department WHERE employee.deptno=department.deptno;
+
+SELECT ename,job,sal,dname,d.deptno FROM employee e,department d WHERE e.deptno=d.deptno;
+
+SELECT ename,job,sal,dname FROM employee e INNER JOIN department d ON e.deptno=d.deptno;
+
+-- 即使部门下没有员工，也需要把该部门信息显示出来  外连接
+SELECT ename,job,sal,dname,d.deptno FROM employee e RIGHT JOIN department d ON e.deptno=d.deptno;
+SELECT ename,job,sal,dname,d.deptno FROM department d LEFT JOIN employee e ON d.deptno=e.deptno;
+
+
+sql server  identited(1,1)
+mysql auto_increment
+oracle  sequence序列对象
+sqlite   _id
+
+空值null
+代表从来没有赋过值
+与0或''不是一个含义
+
+判断空值 is null,is not null
+
+INSERT INTO department VALUES(11,'生产科','566');
+INSERT INTO department VALUES(12,'计划科','578');
+INSERT INTO department VALUES(13,'一车间','467');
+INSERT INTO department(departid,departname) VALUES(14,'科研科');
+
+SELECT * FROM department;
+
+INSERT INTO employee(NAME,sex,age,departid) VALUES('李勇','男',20,11);
+INSERT INTO employee(NAME,sex,age,departid) VALUES('刘晨','女',19,14);
+INSERT INTO employee(NAME,sex,age,departid) VALUES('王敏','女',22,12);
+INSERT INTO employee(NAME,sex,age,departid) VALUES('张立','男',21,13);
+
+SELECT * FROM employee;
+
+
+-- 1．查询出所有员工的信息，包括部门编号，部门名称，电话
+SELECT id,NAME,sex,age,e.departid,departname,tel FROM employee e,department d WHERE e.departid=d.departid;
+-- 2．查询出所有部门的情况
+SELECT * FROM department;
+-- 4.查询出年龄大于20的员工的信息，包括部门编号，部门名称，电话
+SELECT id,NAME,sex,age,e.departid,departname,tel FROM employee e,department d WHERE e.departid=d.departid AND age>20;
+-- 5.查询出所有女员工的信息，包括部门编号，部门名称，电话。
+SELECT id,NAME,sex,age,e.departid,departname,tel FROM employee e,department d WHERE e.departid=d.departid AND sex='女';
+-- 6.查询所生产科的电话号码。
+SELECT tel FROM department WHERE departname='生产科';
+-- 7.查询出没有电话的部门。
+SELECT * FROM department WHERE tel IS NULL;
+
+
+统计函数
+统计个数
+count（）函数
+
+select count(*|列名) from 表名 [where 条件];
+
+模糊查询：
+where 列名 like '模糊查询的表达式'
+
+通配符：
+%   代表0~多外字符
+_     代表一个字符
+
+
+where tel like '135%'
+
+where tel like '135________'
+
+
+INSERT INTO car VALUES('110104195709052035','金长燕','广东阳江市',30,'13388885555','女');
+INSERT INTO car VALUES('230122197108131319','杨瑞林','辽宁沈阳市',40,'13566668888','男');
+
+INSERT INTO carinfo VALUES('粤Q01339','CFA6470G','绿色','2006-02-25','长丰(集团)有限责任公司');
+INSERT INTO carinfo VALUES('辽A36130','BENZ C280','银色','2008-04-07','北京奔驰-戴姆勒-克莱斯勒汽车有限公司');
+
+INSERT INTO carmaster VALUES('110104195709052035','粤Q01339','2006-05-25');
+INSERT INTO carmaster VALUES('230122197108131319','辽A36130','2008-06-07');
+
+
+-- 6.查询统计共计有多少车主.
+SELECT COUNT(*) FROM car;
+-- 7.查询手机号以’135’开头的车主信息
+SELECT * FROM car WHERE tel LIKE '135%';
+-- 8.查询车主性别是男并且年龄大于35的车主姓名和身份证号
+SELECT username,cardid FROM car WHERE gender='男' AND age>35;
+-- 9.查询牌照为’ 粤Q01339’的车的详细信息
+SELECT * FROM carinfo WHERE carno='粤Q01339';
+-- 10.查询身份证号为’ 110104195709052035’的车主具有车的详细信息
+SELECT carinfo.* FROM carinfo,carmaster WHERE carinfo.carno=carmaster.carno AND cardid='110104195709052035';
+-- 11.查询具有牌照为’ 粤Q01339’的车的车主详细信息
+SELECT car.* FROM car,carmaster WHERE car.cardid=carmaster.cardid AND carno='粤Q01339';
+-- 查询具有牌照为’ 粤Q01339’的车的车主以及此车的详细信息
+SELECT car.*,carinfo.* FROM car,carmaster,carinfo WHERE car.cardid=carmaster.cardid AND carmaster.carno=carinfo.carno AND carinfo.carno='粤Q01339';
+
+
+
+查询中用到的一些关键字
+
+where 列名 like '...'
+where 列名 not like '...'
+
+
+范围的判断(包含两个边界值的)
+where 列名 between 下限值  and 上限值;
+等价于
+where 列名>=下限值  and 列名<=上限值;
+
+where 列名 not between 下限值  and 上限值;
+
+符合有限值的列表
+where 列名 in (值1,值2,...)
+等价于
+where 列名 =值1 or 列名=值2 or ...
+
+where 列名 not in (值1,值2,...)
+
+sql语言 结构化查询语言  统一的标准
+
+统计函数：
+总记录数：
+count(*)
+
+求最大值
+max(列名)
+
+求最小值
+min(列名)
+
+求总和
+sum(列名)
+
+求平均值
+avg(列名)
+
+
+-- 查询一下车牌中不包含A的车辆信息
+SELECT * FROM carinfo WHERE carno NOT LIKE '%A%';
+
+-- 查询一下工资在3000~5000之内的员工的信息
+SELECT * FROM employee WHERE sal BETWEEN 3000 AND 5000;
+SELECT * FROM employee WHERE sal>=3000 AND sal<=5000;
+
+SELECT * FROM employee WHERE sal NOT BETWEEN 3000 AND 5000;
+
+-- 在部门编号10或30的员工信息
+SELECT * FROM employee WHERE deptno IN (10,30);
+SELECT * FROM employee WHERE deptno=10 OR deptno=30;
+
+SELECT * FROM employee WHERE deptno NOT IN (10,30);
+
+-- 获得雇员表中的总记录数
+SELECT COUNT(*) FROM employee;
+
+-- 查询出最高工资
+SELECT MAX(sal) FROM employee;
+
+-- 查询出最低工资
+SELECT MIN(sal) FROM employee;
+
+-- 计算出总工资
+SELECT SUM(sal) FROM employee;
+
+-- 计算出平均工资
+SELECT AVG(sal) FROM employee;
+
+分组统计
+group by 列名 [having 条件]
+注意：
+1、与分组统计函数一起出现在select子句中的列就一定要保证该列出现在group by子句中
+2、统计函数不允许出现在where子句
+
+select *|列名,...
+from 表名
+[where 条件]
+[group by 列名 [having 条件]]
+[order by 列名  [asc|desc]]
+注意：
+order by子句一定是在所有子句的最后面
+
+修改
+update 表名 set 列名=更新值,...  [where 条件]
+
+删除
+delete from 表名 [where 条件]
+
+-- 根据部门来进行分组统计月薪的平均值,如果在4000以下的就不显示
+-- SELECT deptno,AVG(sal) FROM employee where avg(sal)>=4000 GROUP BY deptno;
+SELECT deptno,AVG(sal) FROM employee  GROUP BY deptno HAVING AVG(sal)>=4000;
+
+-- 根据部门来进行分组统计月薪的平均值(员工月薪在3000以下的就不参加统计)
+SELECT deptno,AVG(sal) FROM employee WHERE sal>=3000 GROUP BY deptno;
+
+-- 对沈腾这名员工的月薪进行涨薪
+UPDATE employee SET sal=9000,job='高级软件工程师' WHERE ename='沈腾';
+
+-- 烧饼这名员工离职了
+DELETE FROM employee WHERE empno='e005';
+
+
+
+1.查询所有图书的书名，作者，单价，库存量
+Select bookname,author,price,savenum from book;
+2.查询所有读者信息
+Select * from reader;
+3.查询单价最贵的图书
+Select max(price) from book;
+Select * from book where price=(select max(price) from book);
+4.查询库存量小于1000的图书
+Select * from book where savenum<1000;
+5.查询平均单价
+Select avg(price) from book;
+6.查询出图书号是S001的书名,作者, 单价, 库存量, 借期, 还期, 读者姓名, 身份证号的信息.
+Select bookname,author,price,savenum,borrowdate,returndate,readername,cardid from book,borrowinfo,reader where book.bookid=borrowinfo.bookid and borrowinfo.readerid=reader.readerid and book.bookid=’s001’;
+7.查询出’ 张雅文’作者, 所写的书名, 单价, 库存量, 借阅的读者名称, 身份证号.
+Select bookname,author,price,savenum,readername,cardid from book,borrowinfo,reader where book.bookid=borrowinfo.bookid and borrowinfo.readerid=reader.readerid and author=’张雅文’;
+
+
+
+
+
